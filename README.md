@@ -4,6 +4,13 @@ A collection of scripts to automate the installation and configuration of **dnsc
 
 This project is inspired by the excellent [macOS Security and Privacy Guide](https://github.com/drduh/macOS-Security-and-Privacy-Guide) by drduh.
 
+## How it Works
+
+1.  **dnsmasq** runs on port 53 (standard DNS port). It handles local caching and checks the blocklist.
+2.  If a domain is blocked, it returns `0.0.0.0` (NXDOMAIN equivalent behavior with Hagezi list).
+3.  If allowed and not in cache, it forwards the query to **dnscrypt-proxy** on port 5353.
+4.  **dnscrypt-proxy** encrypts the query and sends it to a secure upstream resolver.
+
 ## Features
 
 *   **Automated Installation:** Installs required packages using Homebrew (macOS) or native package managers (Linux).
@@ -79,13 +86,6 @@ By default, the **Hagezi Multi PRO** list is used. To change the protection leve
     *   Config file: `/usr/local/etc/dnscrypt-proxy.toml` (macOS) or `/etc/dnscrypt-proxy/dnscrypt-proxy.toml` (Linux).
 *   **dnsmasq:** Configured to listen on `127.0.0.1:53` and forward queries to `dnscrypt-proxy`.
     *   Config file: `/usr/local/etc/dnsmasq.conf` (macOS) or `/etc/dnsmasq.conf` (Linux).
-
-## How it Works
-
-1.  **dnsmasq** runs on port 53 (standard DNS port). It handles local caching and checks the blocklist.
-2.  If a domain is blocked, it returns `0.0.0.0` (NXDOMAIN equivalent behavior with Hagezi list).
-3.  If allowed and not in cache, it forwards the query to **dnscrypt-proxy** on port 5353.
-4.  **dnscrypt-proxy** encrypts the query and sends it to a secure upstream resolver.
 
 ## License
 
