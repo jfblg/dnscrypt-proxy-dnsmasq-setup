@@ -82,13 +82,28 @@ safe_symlink "$REPO_ROOT/config/dnscrypt-proxy.toml" "$ETC_DIR/dnscrypt-proxy.to
 
 # 3. Configure dnsmasq
 echo "Configuring dnsmasq..."
-# Update the conf-file path in the source file to match the macOS environment
-if [ "$DRY_RUN" = false ]; then
-    sed -i '' "s|/etc/dnsmasq.d/|$ETC_DIR/dnsmasq.d/|g" "$REPO_ROOT/config/dnsmasq.conf"
-else
-    echo "[DRY RUN] sed -i '' \"s|/etc/dnsmasq.d/|$ETC_DIR/dnsmasq.d/|g\" \"$REPO_ROOT/config/dnsmasq.conf\""
+
+# Copy the config file instead of symlinking, to avoid modifying the repo file
+echo "Copying config to $ETC_DIR/dnsmasq.conf"
+if [ -f "$ETC_DIR/dnsmasq.conf" ]; then
+    echo "  Backing up existing $ETC_DIR/dnsmasq.conf to $ETC_DIR/dnsmasq.conf.bak"
+    run_cmd mv "$ETC_DIR/dnsmasq.conf" "$ETC_DIR/dnsmasq.conf.bak"
 fi
-safe_symlink "$REPO_ROOT/config/dnsmasq.conf" "$ETC_DIR/dnsmasq.conf" ""
+
+# Ensure directory exists
+if [ ! -d "$ETC_DIR" ]; then
+     run_cmd mkdir -p "$ETC_DIR"
+fi
+
+run_cmd cp "$REPO_ROOT/config/dnsmasq.conf" "$ETC_DIR/dnsmasq.conf"
+
+# Update the conf-file path in the INSTALLED file to match the macOS environment
+if [ "$DRY_RUN" = false ]; then
+    sed -i '' "s|/etc/dnsmasq.d/|$ETC_DIR/dnsmasq.d/|g" "$ETC_DIR/dnsmasq.conf"
+else
+    echo "[DRY RUN] sed -i '' \"s|/etc/dnsmasq.d/|$ETC_DIR/dnsmasq.d/|g\" \"$ETC_DIR/dnsmasq.conf\""
+fi
+
 run_cmd mkdir -p "$ETC_DIR/dnsmasq.d"
 
 # 4. Install update script and config
