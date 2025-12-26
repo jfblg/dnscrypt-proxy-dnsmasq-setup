@@ -87,6 +87,41 @@ By default, the **Hagezi Multi PRO** list is used. To change the protection leve
 *   **dnsmasq:** Configured to listen on `127.0.0.1:53` and forward queries to `dnscrypt-proxy`.
     *   Config file: `/usr/local/etc/dnsmasq.conf` (macOS) or `/etc/dnsmasq.conf` (Linux).
 
+### Setting 127.0.0.1 as System DNS
+
+After installation, you must point your operating system to use the local `dnsmasq` instance as its DNS resolver.
+
+#### macOS
+1.  Open **System Settings** > **Network**.
+2.  Select your active connection (e.g., Wi-Fi) and click **Details...**.
+3.  Go to the **DNS** tab.
+4.  Click the **+** button and add `127.0.0.1`.
+5.  Remove any other DNS servers listed.
+
+Alternatively, via CLI:
+```bash
+sudo networksetup -setdnsservers Wi-Fi 127.0.0.1
+```
+
+#### Linux
+Most modern distributions use `systemd-resolved` or `NetworkManager`.
+
+**Option A: Edit /etc/resolv.conf** (Manual/Static)
+Ensure `/etc/resolv.conf` contains:
+```text
+nameserver 127.0.0.1
+```
+
+**Option B: NetworkManager**
+```bash
+nmcli device show | grep IP4.DNS
+nmcli con mod <connection_name> ipv4.dns "127.0.0.1"
+nmcli con up <connection_name>
+```
+
+**Option C: systemd-resolved**
+If you want to keep `systemd-resolved` running, set `DNSStubListener=no` in `/etc/systemd/resolved.conf` to free port 53, and set your global DNS to `127.0.0.1`.
+
 ## License
 
 MIT License. See [LICENSE](LICENSE) for details.
