@@ -64,16 +64,16 @@ safe_symlink() {
         fi
         
         echo "  Backing up existing $dest to $dest.bak"
-        $sudo_cmd run_cmd mv "$dest" "$dest.bak"
+        run_cmd $sudo_cmd mv "$dest" "$dest.bak"
     fi
 
     # Create directory if needed
     local dir=$(dirname "$dest")
     if [ ! -d "$dir" ]; then
-         $sudo_cmd run_cmd mkdir -p "$dir"
+         run_cmd $sudo_cmd mkdir -p "$dir"
     fi
 
-    $sudo_cmd run_cmd ln -sf "$src" "$dest"
+    run_cmd $sudo_cmd ln -sf "$src" "$dest"
 }
 
 # 2. Configure dnscrypt-proxy
@@ -82,6 +82,12 @@ safe_symlink "$REPO_ROOT/config/dnscrypt-proxy.toml" "$ETC_DIR/dnscrypt-proxy.to
 
 # 3. Configure dnsmasq
 echo "Configuring dnsmasq..."
+# Update the conf-file path in the source file to match the macOS environment
+if [ "$DRY_RUN" = false ]; then
+    sed -i '' "s|/etc/dnsmasq.d/|$ETC_DIR/dnsmasq.d/|g" "$REPO_ROOT/config/dnsmasq.conf"
+else
+    echo "[DRY RUN] sed -i '' \"s|/etc/dnsmasq.d/|$ETC_DIR/dnsmasq.d/|g\" \"$REPO_ROOT/config/dnsmasq.conf\""
+fi
 safe_symlink "$REPO_ROOT/config/dnsmasq.conf" "$ETC_DIR/dnsmasq.conf" ""
 run_cmd mkdir -p "$ETC_DIR/dnsmasq.d"
 

@@ -27,12 +27,12 @@ remove_symlink_or_file() {
 
     if [ -e "$target" ] || [ -L "$target" ]; then
         echo "Removing $target..."
-        $sudo_cmd run_cmd rm "$target"
+        run_cmd $sudo_cmd rm "$target"
         
         # Restore backup if exists
         if [ -f "$target.bak" ]; then
             echo "Restoring backup $target.bak -> $target..."
-            $sudo_cmd run_cmd mv "$target.bak" "$target"
+            run_cmd $sudo_cmd mv "$target.bak" "$target"
         fi
     else
         echo "Not found: $target"
