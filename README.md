@@ -30,7 +30,26 @@ This project is inspired by the excellent [macOS Security and Privacy Guide](htt
     ./scripts/install.sh
     ```
 
-    *Note: The script may ask for `sudo` password to install packages and configure services.*
+    *Note: The script uses symlinks to the repository files, allowing you to update configurations via git. It may ask for `sudo` password to install packages and configure services.*
+
+### Dry Run (Preview Changes)
+
+To see what the script will do without making any changes, use the `--dry-run` flag:
+```bash
+./scripts/install.sh --dry-run
+```
+
+## Uninstallation
+
+To remove the symlinks and restore any backed-up configuration files:
+```bash
+./scripts/uninstall.sh
+```
+
+You can also preview the uninstallation process:
+```bash
+./scripts/uninstall.sh --dry-run
+```
 
 ## Configuration
 
