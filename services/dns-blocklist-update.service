@@ -1,0 +1,7 @@
+[Unit]
+Description=Update DNS blocklists for dnsmasq
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/dns-blocklist-update.sh -c /etc/dns-blocklists.conf -o /etc/dnsmasq.d/hagezi.conf
