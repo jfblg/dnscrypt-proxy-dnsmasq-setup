@@ -122,6 +122,51 @@ nmcli con up <connection_name>
 **Option C: systemd-resolved**
 If you want to keep `systemd-resolved` running, set `DNSStubListener=no` in `/etc/systemd/resolved.conf` to free port 53, and set your global DNS to `127.0.0.1`.
 
+## Managing Services
+
+Here are the commands to manually start, stop, or restart the services.
+
+### macOS (Homebrew Services)
+Since `dnsmasq` runs on port 53, it operates as a root service.
+
+**Start:**
+```bash
+sudo brew services start dnscrypt-proxy
+sudo brew services start dnsmasq
+```
+
+**Stop:**
+```bash
+sudo brew services stop dnscrypt-proxy
+sudo brew services stop dnsmasq
+```
+
+**Restart:**
+```bash
+sudo brew services restart dnscrypt-proxy
+sudo brew services restart dnsmasq
+```
+
+### Linux (Systemd)
+
+**Start:**
+```bash
+sudo systemctl start dnscrypt-proxy
+sudo systemctl start dnsmasq
+```
+
+**Stop:**
+```bash
+sudo systemctl stop dnscrypt-proxy
+sudo systemctl stop dnsmasq
+```
+
+**Restart:**
+```bash
+sudo systemctl restart dnscrypt-proxy
+sudo systemctl restart dnsmasq
+```
+
 ## License
 
 MIT License. See [LICENSE](LICENSE) for details.

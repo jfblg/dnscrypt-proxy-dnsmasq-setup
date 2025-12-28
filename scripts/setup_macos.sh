@@ -146,8 +146,12 @@ fi
 
 # 6. Start/Restart services
 echo "Starting DNS services..."
-run_cmd sudo brew services restart dnscrypt-proxy
-run_cmd sudo brew services restart dnsmasq
+# Explicitly stop then start to ensure the plist is registered correctly as a system daemon
+run_cmd sudo brew services stop dnscrypt-proxy || true
+run_cmd sudo brew services stop dnsmasq || true
+
+run_cmd sudo brew services start dnscrypt-proxy
+run_cmd sudo brew services start dnsmasq
 
 # 7. Initial Run
 echo "Running initial blocklist update..."
